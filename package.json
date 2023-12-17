@@ -19,6 +19,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@prisma/client": "^5.7.0",
     "mqtt": "^5.3.3",
     "node-cron": "^3.0.3"
   }
