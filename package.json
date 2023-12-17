@@ -1,0 +1,24 @@
+{
+  "name": "sensorserver",
+  "version": "1.0.0",
+  "description": "Temp/Humidity Monitoring System",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "rimraf dist && tsc",
+    "lint:check": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts . --fix"
+  },
+  "author": "zhiyan114",
+  "license": "GNUv3",
+  "devDependencies": {
+    "@types/node": "^20.10.4",
+    "eslint": "^8.56.0",
+    "prisma": "^5.7.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "mqtt": "^5.3.3",
+    "node-cron": "^3.0.3"
+  }
+}
