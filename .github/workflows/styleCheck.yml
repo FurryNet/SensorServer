@@ -21,5 +21,7 @@ jobs:
       run: npm i
     - name: lint check
       run: npm run lint:check
+    - name: prisma model check
+      run: npx prisma generate
     - name: build check
       run: npm run build
