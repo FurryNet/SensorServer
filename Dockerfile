@@ -46,4 +46,4 @@ COPY --from=buildenv /source/dist /app/
 COPY --from=buildenv /source/node_modules /app/node_modules/
 
 # Sleep is specifically for railway internal network wait time
-CMD sleep 300 && node index.js
+CMD sleep 3 && node index.js
