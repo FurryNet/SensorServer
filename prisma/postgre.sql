@@ -3,7 +3,7 @@ CREATE TABLE sensor_records (
     temperature NUMERIC(5,2) NOT NULL,
     humidity NUMERIC(5,2) NOT NULL,
     /* We won't use default value since this data must come from the sensor for accuracy (otherwise the time would offset by network and db query latency) */
-    created_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP UNIQUE NOT NULL,
     /* this is used for internal reference in-case multiple locations are involved */
     device_name TEXT
 );

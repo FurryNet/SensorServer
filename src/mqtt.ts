@@ -1,10 +1,10 @@
 import { captureException, captureMessage } from '@sentry/node';
-import { connect } from 'mqtt';
+import { ErrorWithReasonCode, connect } from 'mqtt';
 import { MQTTData } from './protobuf';
 import { util } from 'protobufjs';
 import { PrismaCli } from './utils';
 
-const client = connect(process.env.MQTT_URL ?? "mqtt://test.mosquitto.org");
+const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org");
 
 client.on("connect", () => {
   console.log("MQTT Connection Established");
@@ -19,7 +19,9 @@ client.on("connect", () => {
 
 client.on("error", (err) => {
   console.log("MQTT Connection Error: "+err);
-  captureException(err);
+  if(!(err instanceof ErrorWithReasonCode))
+    captureException(err);
+  
 });
 
 client.on("message", async (topic, message) => {

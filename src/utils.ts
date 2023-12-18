@@ -4,7 +4,9 @@ const commitHash = process.env["RAILWAY_GIT_COMMIT_SHA"];
 if(commitHash) console.log(`Loading Software Version: ${commitHash}`);
 
 /* Load Prisma Client */
-const PrismaCli = new PrismaClient();
+const PrismaCli = new PrismaClient({
+  errorFormat: "minimal"
+});
 
 export {
   PrismaCli,

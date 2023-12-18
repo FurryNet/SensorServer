@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -8,9 +9,9 @@ datasource db {
 }
 
 model sensor_records {
-  id            Int      @id @default(autoincrement())
-  temperature   Decimal  @db.Decimal(5, 2)
-  humidity      Decimal  @db.Decimal(5, 2)
-  created_at    DateTime @db.Timestamp(6)
-  device_name   String?
+  id          Int      @id @default(autoincrement())
+  temperature Decimal  @db.Decimal(5, 2)
+  humidity    Decimal  @db.Decimal(5, 2)
+  created_at  DateTime @unique @db.Timestamp(6)
+  device_name String?
 }

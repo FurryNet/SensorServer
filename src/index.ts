@@ -1,5 +1,6 @@
 /* Classic package import */
 import { init as SentryInit, Integrations as SentryIntegrate} from "@sentry/node";
+import { ExtraErrorData } from "@sentry/integrations";
 import { commitHash, PrismaCli } from "./utils";
 import './mqtt';
 import './cron';
@@ -14,7 +15,10 @@ if(DSN) {
     dsn: DSN,
     tracesSampleRate: 0.5,
     integrations: [
-      new SentryIntegrate.Prisma({ client: PrismaCli })
+      new SentryIntegrate.Prisma({ client: PrismaCli }),
+      new ExtraErrorData({
+        depth: 5
+      }),
     ],
     release: commitHash,
     ignoreErrors: [
