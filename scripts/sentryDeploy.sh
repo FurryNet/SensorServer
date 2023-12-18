@@ -14,4 +14,11 @@ if [ -z "$SENTRY_PROJECT" ]; then
 fi
 
 npx sentry-cli sourcemaps inject ./dist
-npx sentry-cli sourcemaps upload ./dist
+
+if [ -z "$RAILWAY_GIT_COMMIT_SHA" ]; then
+    echo "Warning: Git commit hash is missing, release identifier will not be included";
+    npx sentry-cli sourcemaps upload ./dist
+    exit 0;
+fi
+
+npx sentry-cli sourcemaps upload --release="$RAILWAY_GIT_COMMIT_SHA" ./dist
