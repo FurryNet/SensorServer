@@ -29,6 +29,17 @@ if(webhook_url) {
         }
       });
 
+      // This usually doesn't happen unless we run the server before the client is finished...
+      if(result.length == 0) {
+        console.log("Skipped cron summary due to lack of records");
+        if(checkInId) captureCheckIn({
+          checkInId,
+          monitorSlug: CRON_SLUG!,
+          status: "ok"
+        });
+        return;
+      }
+
       // Create the average value
       const avg_temp = result.reduce((acc, cur) => acc + cur.temperature.toNumber(), 0) / result.length;
       const avg_hum = result.reduce((acc, cur) => acc + cur.humidity.toNumber(), 0) / result.length;
