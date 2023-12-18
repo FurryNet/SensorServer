@@ -14,8 +14,13 @@ RUN chmod +x ./scripts/*
 COPY src/ ./src/
 RUN npm run build
 
-# Perform build cleanup (or post-build stuff)
+# Run some sentry sourcemap deployment
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
 RUN scripts/sentryDeploy.sh
+
+# Perform postbuild cleanup for production
 RUN npm prune --production
 
 
@@ -33,5 +38,5 @@ RUN npm install -g npm@latest
 COPY --from=buildenv /source/dist /app/
 COPY --from=buildenv /source/node_modules /app/node_modules/
 
-# Sleep is specifically  for railway internal network wait time
+# Sleep is specifically for railway internal network wait time
 CMD sleep 300 && node index.js
