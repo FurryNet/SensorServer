@@ -13,7 +13,7 @@ if(DSN) {
   console.log("Sentry DSN found, enabling monitoring");
   SentryInit({
     dsn: DSN,
-    tracesSampleRate: 0.5,
+    tracesSampleRate: 0.1,
     integrations: [
       new SentryIntegrate.Prisma({ client: PrismaCli }),
       new ExtraErrorData({

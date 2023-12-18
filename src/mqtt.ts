@@ -1,4 +1,4 @@
-import { captureException, captureMessage } from '@sentry/node';
+import { captureException, captureMessage, startTransaction } from '@sentry/node';
 import { ErrorWithReasonCode, connect } from 'mqtt';
 import { MQTTData } from './protobuf';
 import { util } from 'protobufjs';
@@ -26,6 +26,11 @@ client.on("error", (err) => {
 
 client.on("message", async (topic, message) => {
   if(topic !== "SensorRecord") return console.log("Received message from unknown topic: "+topic);
+  const SentryTX = startTransaction({
+    op: "SR_MSG_MQTT",
+    name:"SensorRecord_Message"
+  });
+
   try {
     const data = MQTTData.decode(message);
     await PrismaCli.sensor_records.create({
@@ -43,5 +48,7 @@ client.on("message", async (topic, message) => {
     }
     console.log("An Error Occured while processing the data: "+ex);
     captureException(ex);
+  } finally {
+    SentryTX.finish();
   }
 });
