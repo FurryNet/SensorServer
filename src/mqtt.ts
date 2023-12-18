@@ -49,6 +49,6 @@ client.on("message", async (topic, message) => {
     console.log("An Error Occured while processing the data: "+ex);
     captureException(ex);
   } finally {
-    SentryTX.finish();
+    SentryTX?.finish();
   }
 });
