@@ -12,6 +12,7 @@ COPY tsconfig.json prisma/ ./
 COPY scripts/ ./scripts
 RUN chmod +x ./scripts/*
 COPY src/ ./src/
+
 RUN npx prisma generate
 RUN npm run build
 
@@ -19,6 +20,7 @@ RUN npm run build
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_ORG
 ARG SENTRY_PROJECT
+ARG RAILWAY_GIT_COMMIT_SHA
 RUN scripts/sentryDeploy.sh
 
 # Perform postbuild cleanup for production
