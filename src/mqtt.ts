@@ -1,10 +1,10 @@
-import { captureException, captureMessage } from '@sentry/node';
-import { connect } from 'mqtt';
+import { captureException, captureMessage, startTransaction } from '@sentry/node';
+import { ErrorWithReasonCode, connect } from 'mqtt';
 import { MQTTData } from './protobuf';
 import { util } from 'protobufjs';
 import { PrismaCli } from './utils';
 
-const client = connect(process.env.MQTT_URL ?? "mqtt://test.mosquitto.org");
+const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org");
 
 client.on("connect", () => {
   console.log("MQTT Connection Established");
@@ -19,11 +19,18 @@ client.on("connect", () => {
 
 client.on("error", (err) => {
   console.log("MQTT Connection Error: "+err);
-  captureException(err);
+  if(!(err instanceof ErrorWithReasonCode))
+    captureException(err);
+  
 });
 
 client.on("message", async (topic, message) => {
   if(topic !== "SensorRecord") return console.log("Received message from unknown topic: "+topic);
+  const SentryTX = startTransaction({
+    op: "SR_MSG_MQTT",
+    name:"SensorRecord_Message"
+  });
+
   try {
     const data = MQTTData.decode(message);
     await PrismaCli.sensor_records.create({
@@ -41,5 +48,7 @@ client.on("message", async (topic, message) => {
     }
     console.log("An Error Occured while processing the data: "+ex);
     captureException(ex);
+  } finally {
+    SentryTX.finish();
   }
 });
