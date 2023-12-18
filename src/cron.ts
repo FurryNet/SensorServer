@@ -4,7 +4,7 @@ import { PrismaCli } from './utils';
 import { cron } from './config.json';
 
 const webhook_url = process.env["DISCORD_WEBHOOK"];
-const CRON_SLUG = process.env["SENTRY_CRON_SLUG"];
+const CRON_SLUG = cron.SentrySlug;
 if(webhook_url) {
   // Print out the status
   console.log("Daily captured summary will be sent to the webhook");
