@@ -25,3 +25,5 @@ jobs:
       run: npx prisma generate
     - name: build check
       run: npm run build
+    - name: Test the docker build
+      run: docker build .

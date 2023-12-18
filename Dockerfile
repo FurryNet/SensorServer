@@ -12,6 +12,7 @@ COPY tsconfig.json prisma/ ./
 COPY scripts/ ./scripts
 RUN chmod +x ./scripts/*
 COPY src/ ./src/
+RUN npx prisma generate
 RUN npm run build
 
 # Run some sentry sourcemap deployment
