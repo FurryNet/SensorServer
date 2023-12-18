@@ -1,8 +1,8 @@
 /* Classic package import */
 import { init as SentryInit, Integrations as SentryIntegrate} from "@sentry/node";
-import MQinit from './mqtt';
-import CRinit from './cron';
 import { commitHash, PrismaCli } from "./utils";
+import './mqtt';
+import './cron';
 
 
 
@@ -26,11 +26,9 @@ if(DSN) {
     beforeSend: (event, hint) => {
       // Only passing exceptions
       if (hint?.originalException) return event;
+      // Or if there's error message
+      if (event.level == "error") return event;
       return null;
     }
   });
 }
-
-/* Load up the runner functions */
-MQinit();
-CRinit();

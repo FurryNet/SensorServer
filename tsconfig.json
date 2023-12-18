@@ -5,6 +5,8 @@
         "allowJs": true,
         "module": "CommonJS",
         "target": "ESNext",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
         "strict": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,

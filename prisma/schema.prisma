@@ -7,10 +7,10 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
-model temp_records {
+model sensor_records {
   id            Int      @id @default(autoincrement())
   temperature   Decimal  @db.Decimal(5, 2)
   humidity      Decimal  @db.Decimal(5, 2)
-  record_ts     DateTime @db.Timestamp(6)
-  location_name String?
+  created_at    DateTime @db.Timestamp(6)
+  device_name   String?
 }
