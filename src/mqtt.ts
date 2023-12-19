@@ -4,7 +4,9 @@ import { MQTTData } from './protobuf';
 import { util } from 'protobufjs';
 import { PrismaCli } from './utils';
 
-const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org");
+const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org", {
+  protocolVersion: 5,
+});
 
 client.on("connect", () => {
   console.log("MQTT Connection Established");
