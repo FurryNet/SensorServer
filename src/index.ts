@@ -25,7 +25,8 @@ if(DSN) {
       "TimeoutError",
       "AbortError",
       "NetworkError",
-      "EADDRINUSE"
+      "EADDRINUSE",
+      "ECONNREFUSED",
     ],
     beforeSend: (event, hint) => {
       // Only passing exceptions
