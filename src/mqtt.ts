@@ -32,14 +32,17 @@ client.on("message", async (topic, message) => {
 
   try {
     const data = MQTTData.decode(message);
+
     await PrismaCli.sensor_records.create({
       data: {
         temperature: data.temperature,
         humidity: data.humidity,
-        created_at: new Date(data.timestamp),
+        created_at: new Date(Number(data.timestamp)),
         device_name: data.identifier
       }
     });
+    
+    console.log(`Processed data from ${data.identifier}`);
   } catch(ex) {
     if (ex instanceof util.ProtocolError) {
       console.log("MQTT Received incomplete Protobuf Data: "+ex);

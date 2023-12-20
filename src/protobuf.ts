@@ -3,7 +3,7 @@ import { Message, Type, Field } from "protobufjs/light";
 // Data definition for the MQTT message
 @Type.d("QueueData")
 export class MQTTData extends Message<MQTTData> {
-  @Field.d(1, "string", "required")
+  @Field.d(1, "uint64", "required")
   public timestamp!: string;
   @Field.d(2, "double", "required")
   public temperature!: number;
