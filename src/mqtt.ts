@@ -1,15 +1,16 @@
-import { captureException, captureMessage, getCurrentHub } from '@sentry/node';
+import { captureException, getCurrentHub } from '@sentry/node';
 import { ErrorWithReasonCode, connect } from 'mqtt';
 import { MQTTData } from './protobuf';
 import { util } from 'protobufjs';
 import { PrismaCli } from './utils';
+import { Prisma } from '@prisma/client';
 
 const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org");
 
 client.on("connect", () => {
   console.log("MQTT Connection Established");
   client.subscribe("SensorRecord", {
-    qos: 2,
+    qos: 0,
   }, (err) => {
     if(!err) return console.log("Succesfully subscribed to the record topic");
     console.log("Failed to subscribe to the record topic");
@@ -41,13 +42,20 @@ client.on("message", async (topic, message) => {
         device_name: data.identifier
       }
     });
-    
+
     console.log(`Processed data from ${data.identifier}`);
   } catch(ex) {
     if (ex instanceof util.ProtocolError) {
       console.log("MQTT Received incomplete Protobuf Data: "+ex);
-      captureMessage("MQTT Received incomplete Protobuf Data: "+ex.message, "fatal");
+      captureException(ex);
+      return;
     }
+
+    if(ex instanceof Prisma.PrismaClientKnownRequestError &&
+      ex.code === "P2002" &&
+      (ex.meta?.target as string[] | undefined)?.includes("created_at"))
+      return console.log("Duplicate Record Received");
+
     console.log("An Error Occured while processing the data: "+ex);
     captureException(ex);
   } finally {
