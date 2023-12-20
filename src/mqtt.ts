@@ -9,7 +9,7 @@ const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org");
 client.on("connect", () => {
   console.log("MQTT Connection Established");
   client.subscribe("SensorRecord", {
-    qos: 2,
+    qos: 0,
   }, (err) => {
     if(!err) return console.log("Succesfully subscribed to the record topic");
     console.log("Failed to subscribe to the record topic");
@@ -41,7 +41,7 @@ client.on("message", async (topic, message) => {
         device_name: data.identifier
       }
     });
-    
+
     console.log(`Processed data from ${data.identifier}`);
   } catch(ex) {
     if (ex instanceof util.ProtocolError) {
