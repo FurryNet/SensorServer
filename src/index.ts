@@ -21,6 +21,7 @@ if(DSN) {
       }),
     ],
     release: commitHash,
+    environment: process.env["DOPPLER_ENVIRONMENT"] ?? "development",
     ignoreErrors: [
       "TimeoutError",
       "AbortError",
