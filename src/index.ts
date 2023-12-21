@@ -5,7 +5,12 @@ import { commitHash, PrismaCli } from "./utils";
 import './mqtt';
 import './cron';
 
-
+// Exit if node version isnt 18.XX+
+const nodeVersion = Number(process.version.split(".")[0].slice(1));
+if(nodeVersion < 18) {
+  console.log("Minimum Node v18.XX is required");
+  process.exit(1);
+}
 
 /* Setup Sentry monitoring */
 const DSN = process.env["SENTRY_DSN"];
