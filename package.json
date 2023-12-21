@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "rimraf dist && tsc",
+    "sentry:dist": "npx npx sentry-cli sourcemaps inject ./dist && sentry-cli sourcemaps upload --release=\"$(git rev-parse HEAD)\" ./dist",
     "lint:check": "eslint --ext .ts .",
     "lint:fix": "eslint --ext .ts . --fix"
   },
