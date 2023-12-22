@@ -51,9 +51,9 @@ if(webhook_url) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
+          content: cron.userPing.map(id => `<@${id}>`).join(" "),
           allowed_mentions: {
-            parse: ["users"],
-            users: cron.userPing.map(id => `<@${id}>`)
+            parse: ["users"]
           },
           embeds: [
             {
@@ -81,7 +81,7 @@ if(webhook_url) {
 
       // Check the response
       if(!res.ok)
-        throw new CronError("Discord Webhook", res.status, `HTTP Status not OK`);
+        throw new CronError("Discord Webhook", res.status, await res.text());
 
       // Confirm the checkin status
       if(checkInId) captureCheckIn({
