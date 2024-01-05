@@ -1,9 +1,0 @@
-{
-    "cron": {
-        "time": "0 0 * * *",
-        "userPing": [
-            "233955058604179457"
-        ],
-        "SentrySlug": "daily-average-notification"
-    }
-}

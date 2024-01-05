@@ -1,7 +1,0 @@
-{
-    "recommendations": [
-        "prisma.prisma",
-        "ms-azuretools.vscode-docker",
-        "doppler.doppler-vscode"
-    ]
-}
