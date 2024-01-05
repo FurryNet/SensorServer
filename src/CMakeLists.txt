@@ -1,0 +1,2 @@
+add_executable(SensorServer main.cpp)
+target_link_libraries(SensorServer sentry)
