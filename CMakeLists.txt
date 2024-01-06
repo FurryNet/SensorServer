@@ -14,15 +14,17 @@ endif()
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # REMEMER TO REMOVE THIS WHEN DONE WITH DEVELOPMENT::
+set(SENTRY_DSN "FakeDSN@example.com/111/111")
 set(ENV "IDE_DEV")
 set(BUILD_HASH "random_hash_value_placeholder")
 
 
 # Some variable checks
-if(NOT DEFINED ENV)
+if(NOT DEFINED SENTRY_DSN)
+    message(WARNING "Missing Sentry DSN, error capturing will be ignored!")
+elseif(NOT DEFINED ENV)
     message(FATAL_ERROR "Missing ENV variable. Make sure you run the build script.")
-endif()
-if(NOT DEFINED BUILD_HASH)
+elseif(NOT DEFINED BUILD_HASH)
     message(FATAL_ERROR "Missing BUILD_HASH. Make sure your're building it within git directory")
 endif()
 
