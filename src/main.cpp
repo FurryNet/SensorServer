@@ -28,5 +28,4 @@ int main() {
 
     /* Cleanup when software is closed */
     sentry_close();
-
 }
