@@ -4,7 +4,6 @@
 #include <string.h>
 #include <cerrno>
 
-typedef intptr_t ssize_t;
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 
 int readConfig(config_t* config, const char* path) {

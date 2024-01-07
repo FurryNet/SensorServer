@@ -6,4 +6,5 @@ enum logType {
 	warning,
 	error
 };
-void log(logType type, const char* message);
+// Log message to console with timestamp. Message can be formatted with printf style.
+void log(logType type, const char* message, ...);

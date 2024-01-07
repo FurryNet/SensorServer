@@ -21,9 +21,9 @@ int main() {
     sentry_init(SenOpt);
 #endif
 #if defined(BUILD_HASH)
-    printf("Software Loaded. Version: %s", BUILD_HASH);
+    log(info, "Software Loaded. Version: %s", BUILD_HASH);
 #else
-    printf("Software Loaded. Version: Unknown");
+    log(info, "Software Loaded. Version: Unknown");
 #endif
     config_t conf;
     if(readConfig(&conf, "server.conf") == -1) {
