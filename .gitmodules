@@ -1,9 +1,6 @@
 [submodule "lib/sentry-native"]
 	path = lib/sentry-native
 	url = https://github.com/getsentry/sentry-native.git
-[submodule "lib/curl"]
-	path = lib/curl
-	url = https://github.com/curl/curl.git
 [submodule "lib/libpqxx"]
 	path = lib/libpqxx
 	url = https://github.com/jtv/libpqxx.git
