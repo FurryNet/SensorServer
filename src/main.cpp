@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <sentry.h>
+#include <config.h>
+#include <utils.h>
 
 #if defined(SENTRY_DSN) && !defined(ENV)
 #error "ENV Not Found"
@@ -23,6 +25,11 @@ int main() {
 #else
     printf("Software Loaded. Version: Unknown");
 #endif
+    config_t conf;
+    if(readConfig(&conf, "server.conf") == -1) {
+        log(error, "Config file not found. Exiting...");
+        return -1;
+    }
 
     /* Run Codes Here */
 

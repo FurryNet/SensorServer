@@ -20,5 +20,4 @@ void log(logType type, const char* message) {
 			printf("\033[0;31m[%s] %s\033[0m\n", timeStr, message);
 			break;
 	}
-	//@TODO: ADD A CONFIG READING COMMAND
 }

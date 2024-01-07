@@ -17,7 +17,8 @@ endif()
 set(SENTRY_DSN "FakeDSN@example.com/111/111")
 set(ENV "IDE_DEV")
 set(BUILD_HASH "random_hash_value_placeholder")
-
+set(PostgreSQL_ADDITIONAL_VERSIONS "16.1")
+set(PostgreSQL_ROOT "E:/Program Files/PostgreSQL/16")
 
 # Some variable checks
 if(NOT DEFINED SENTRY_DSN)
