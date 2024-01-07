@@ -1,4 +1,4 @@
-#find_package(CURL REQUIRED) // Windows development suck ass. Using submodule for the sake of that.
+find_package(CURL REQUIRED)
 add_executable(SensorServer
 	main.cpp
 	webhook.cpp
