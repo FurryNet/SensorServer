@@ -3,8 +3,10 @@
 #include <config.h>
 #include <string.h>
 #include <cerrno>
+#include <ctype.h>
 
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
+void trimWhitespace(char* str);
 
 int readConfig(config_t* config, const char* path) {
     FILE *fp = fopen(path, "r");
@@ -30,11 +32,8 @@ int readConfig(config_t* config, const char* path) {
         value[strcspn(value, "\n")] = 0;
 
         // Trim any spaces around the key and value
-        char* end;
-        while((end = strchr(key, ' ')) != NULL)
-            *end = 0;
-        while((end = strchr(value, ' ')) != NULL)
-            *end = 0;
+        trimWhitespace(key);
+        trimWhitespace(value);
         
         // Start Parsing the config
         if(strcmp(key, "cron_time") == 0) {
@@ -122,4 +121,25 @@ ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
 
     (*lineptr)[pos] = '\0';
     return pos;
+}
+
+// Trim both leading and trailing whitespace
+void trimWhitespace(char* str) {
+    if (str == NULL || *str == '\0')
+        return;
+    
+    // Trim leading whitespace
+    char *start = str;
+    while (isspace(*start))
+        start++;
+
+    // Trim trailing whitespace
+    char *end = str + strlen(str) - 1;
+    while (end > start && isspace(*end))
+        --end;
+    *(end + 1) = '\0'; // Null-terminate the trimmed string
+
+    // Shift the trimmed string to the beginning
+    if (start != str)
+        memmove(str, start, end - start + 2);
 }

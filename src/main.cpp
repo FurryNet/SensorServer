@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <sentry.h>
 #include <config.h>
-#include <utils.h>
+#include <logger.h>
 
 #if defined(SENTRY_DSN) && !defined(ENV)
 #error "ENV Not Found"

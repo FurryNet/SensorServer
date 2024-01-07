@@ -4,7 +4,7 @@ find_package(PostgreSQL REQUIRED)
 add_executable(SensorServer
 	main.cpp
 	webhook.cpp
-	utils.cpp
+	logger.cpp
 	ConfigManager.cpp
 )
 
