@@ -113,7 +113,7 @@ if(webhook_url) {
         if(!alreadyNotified && status.lastReceived.getTime() < Date.now() - cron.noDataCheck.checkInterval) {
           res = await discordWebhook(webhook_url, {
             title: "🔴 No Data Received 🔴",
-            description: `No data has been received in the last 15 seconds`,
+            description: `No data has been received in the last minute`,
             color: 0xff0000,
             fields: [
               {
