@@ -32,9 +32,13 @@ const dataValidation = (data: MQTTData): string | undefined => {
   const TSLen = data.timestamp.length;
   if(TSLen == 0 || TSLen > 16)
     return "Invalid timestamp";
-  if(Number(data.timestamp) < 0 || Number(data.timestamp) > Date.now())
+  if(Number(data.timestamp) < 0 || Number(data.timestamp) > 8.64e15)
     return "Timestamp out of range";
-  
+  const TS = Number(data.timestamp);
+  const currentTS = Date.now();
+  if(TS > currentTS - 1000)
+    return `timestamp is ${TS-currentTS}ms ahead of server time, which is over the 1s threshold`;
+
   return;
 };
 
