@@ -5,6 +5,10 @@ import { util } from 'protobufjs';
 import { PrismaCli } from './utils';
 import { Prisma } from '@prisma/client';
 
+export const status = {
+  lastReceived: new Date(),
+};
+
 const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org");
 
 client.on("connect", () => {
@@ -43,6 +47,7 @@ client.on("message", async (topic, message) => {
       }
     });
 
+    status.lastReceived = new Date();
     console.log(`Processed data from ${data.identifier}`);
   } catch(ex) {
     if (ex instanceof util.ProtocolError) {
