@@ -5,7 +5,7 @@
             "SentrySlug": "daily-average-notification"
         },
         "noDataCheck": {
-            "time": "* * * * *",
+            "time": "*/15 * * * * *",
             "checkInterval": 15000,
             "SentrySlug": "data-receive-check"
         },
