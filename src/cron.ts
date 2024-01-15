@@ -122,6 +122,7 @@ if(webhook_url) {
               }
             ]
           });
+          console.log(`No data received in the last minute. Last received: ${status.lastReceived.toISOString()}`);
           alreadyNotified = true;
         } else if(alreadyNotified && status.lastReceived.getTime() > Date.now() - 15 * 1000) {
           res = await discordWebhook(webhook_url, {
@@ -135,6 +136,7 @@ if(webhook_url) {
               }
             ]
           });
+          console.log(`Data received again at ${status.lastReceived.toISOString()}`);
           alreadyNotified = false;
         }
 
