@@ -2,8 +2,12 @@ import { captureException, getCurrentHub } from '@sentry/node';
 import { ErrorWithReasonCode, connect } from 'mqtt';
 import { MQTTData } from './protobuf';
 import { util } from 'protobufjs';
-import { PrismaCli } from './utils';
+import { PrismaCli, dataValidation } from './utils';
 import { Prisma } from '@prisma/client';
+
+export const status = {
+  lastReceived: new Date(),
+};
 
 const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org");
 
@@ -34,6 +38,11 @@ client.on("message", async (topic, message) => {
   try {
     const data = MQTTData.decode(message);
 
+    // General validation to reject faulty data
+    const ValidRes = dataValidation(data);
+    if(ValidRes)
+      return console.warn(`Received invalid data from ${data.identifier}: ${ValidRes}`);
+
     await PrismaCli.sensor_records.create({
       data: {
         temperature: data.temperature,
@@ -43,6 +52,7 @@ client.on("message", async (topic, message) => {
       }
     });
 
+    status.lastReceived = new Date();
     console.log(`Processed data from ${data.identifier}`);
   } catch(ex) {
     if (ex instanceof util.ProtocolError) {

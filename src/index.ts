@@ -33,6 +33,7 @@ if(DSN) {
       "NetworkError",
       "EADDRINUSE",
       "ECONNREFUSED",
+      "ECONNRESET",
     ],
     beforeSend: (event, hint) => {
       // Only passing exceptions

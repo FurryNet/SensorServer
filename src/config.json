@@ -1,9 +1,16 @@
 {
     "cron": {
-        "time": "0 0 * * *",
+        "averageReport": {
+            "time": "0 0 * * *",
+            "SentrySlug": "daily-average-notification"
+        },
+        "noDataCheck": {
+            "time": "* * * * *",
+            "checkInterval": 60000,
+            "SentrySlug": "data-receive-check"
+        },
         "userPing": [
             "233955058604179457"
-        ],
-        "SentrySlug": "daily-average-notification"
+        ]
     }
 }
