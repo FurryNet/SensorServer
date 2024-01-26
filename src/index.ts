@@ -39,12 +39,12 @@ if(DSN) {
     beforeSend: (event, hint) => {
       // Filter out prisma timeout error
       if(hint.originalException instanceof Prisma.PrismaClientKnownRequestError &&
-         hint.originalException.code == "P2024"
+         hint.originalException.code === "P2024"
       ) return null;
       // Only passing exceptions
       if (hint?.originalException || (event.exception?.values?.length ?? 0) > 0) return event;
       // Or if there's error message
-      if (event.level == "error") return event;
+      if (event.level === "error") return event;
       return null;
     }
   });

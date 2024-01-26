@@ -35,7 +35,7 @@ if(webhook_url) {
         });
 
         // This usually doesn't happen unless we run the server before the client is finished...
-        if(result.length == 0) {
+        if(result.length === 0) {
           console.log("Skipped cron summary due to lack of records");
           if(checkInId) captureCheckIn({
             checkInId,
