@@ -1,9 +1,6 @@
 /* Classic package import */
-import { init as SentryInit, Integrations as SentryIntegrate} from "@sentry/node";
-import { ExtraErrorData } from "@sentry/integrations";
-import { commitHash, PrismaCli } from "./utils";
-import './mqtt';
-import './cron';
+import { extraErrorDataIntegration, prismaIntegration, init as SentryInit} from "@sentry/node";
+import { commitHash } from "./utils";
 import { Prisma } from "@prisma/client";
 
 // Exit if node version isnt 18.XX+
@@ -21,8 +18,8 @@ if(DSN) {
     dsn: DSN,
     tracesSampleRate: 0.01,
     integrations: [
-      new SentryIntegrate.Prisma({ client: PrismaCli }),
-      new ExtraErrorData({
+      prismaIntegration(),
+      extraErrorDataIntegration({
         depth: 5
       }),
     ],
@@ -49,3 +46,7 @@ if(DSN) {
     }
   });
 }
+
+// Load the stuff after the Sentry is initialized
+import './mqtt';
+import './cron';

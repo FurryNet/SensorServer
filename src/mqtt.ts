@@ -1,4 +1,5 @@
-import { captureException, getCurrentHub } from '@sentry/node';
+import { captureException, startInactiveSpan } from '@sentry/node';
+import "@sentry/tracing";
 import { ErrorWithReasonCode, connect } from 'mqtt';
 import { MQTTData } from './protobuf';
 import { util } from 'protobufjs';
@@ -30,9 +31,10 @@ client.on("error", (err) => {
 
 client.on("message", async (topic, message) => {
   if(topic !== "SensorRecord") return console.log("Received message from unknown topic: "+topic);
-  const SentryTX = getCurrentHub()?.startTransaction({
+  const SentryTX = startInactiveSpan({
     op: "SR_MSG_MQTT",
-    name:"SensorRecord_Message"
+    name:"SensorRecord_Message",
+    forceTransaction: true
   });
 
   try {
@@ -69,6 +71,6 @@ client.on("message", async (topic, message) => {
     console.log("An Error Occured while processing the data: "+ex);
     captureException(ex);
   } finally {
-    SentryTX?.finish();
+    SentryTX?.end();
   }
 });
