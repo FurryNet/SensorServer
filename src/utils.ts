@@ -30,7 +30,7 @@ const dataValidation = (data: MQTTData): string | undefined => {
     return "Identifier too long";
 
   const TSLen = data.timestamp.length;
-  if(TSLen == 0 || TSLen > 16)
+  if(TSLen === 0 || TSLen > 16)
     return "Invalid timestamp";
   if(Number(data.timestamp) < 0 || Number(data.timestamp) > 8.64e15)
     return "Timestamp out of range";

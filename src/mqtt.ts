@@ -1,15 +1,18 @@
-import { captureException, getCurrentHub } from '@sentry/node';
+import { captureException, startInactiveSpan, metrics } from '@sentry/node';
+import "@sentry/tracing";
 import { ErrorWithReasonCode, connect } from 'mqtt';
 import { MQTTData } from './protobuf';
 import { util } from 'protobufjs';
 import { PrismaCli, dataValidation } from './utils';
 import { Prisma } from '@prisma/client';
 
-export const status = {
+export const mqttStatus = {
   lastReceived: new Date(),
 };
 
-const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org");
+const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org", {
+  protocolVersion: 5,
+});
 
 client.on("connect", () => {
   console.log("MQTT Connection Established");
@@ -30,9 +33,10 @@ client.on("error", (err) => {
 
 client.on("message", async (topic, message) => {
   if(topic !== "SensorRecord") return console.log("Received message from unknown topic: "+topic);
-  const SentryTX = getCurrentHub()?.startTransaction({
+  const SentryTX = startInactiveSpan({
     op: "SR_MSG_MQTT",
-    name:"SensorRecord_Message"
+    name:"SensorRecord_Message",
+    forceTransaction: true
   });
 
   try {
@@ -52,8 +56,13 @@ client.on("message", async (topic, message) => {
       }
     });
 
-    status.lastReceived = new Date();
+    // Capture it on sentry as well (for convenient views)
+    metrics.distribution("data.temperature", data.temperature);
+    metrics.distribution("data.humidity", data.humidity, { unit: "percent" });
+
+    mqttStatus.lastReceived = new Date();
     console.log(`Processed data from ${data.identifier}`);
+    metrics.increment("mqtt.received", 1);
   } catch(ex) {
     if (ex instanceof util.ProtocolError) {
       console.log("MQTT Received incomplete Protobuf Data: "+ex);
@@ -69,6 +78,6 @@ client.on("message", async (topic, message) => {
     console.log("An Error Occured while processing the data: "+ex);
     captureException(ex);
   } finally {
-    SentryTX?.finish();
+    SentryTX?.end();
   }
 });

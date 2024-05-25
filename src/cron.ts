@@ -3,7 +3,7 @@ import { schedule } from 'node-cron';
 import { PrismaCli } from './utils';
 import { cron } from './config.json';
 import { discordWebhook } from './webhook';
-import {status} from './mqtt';
+import {mqttStatus} from './mqtt';
 
 const webhook_url = process.env["DISCORD_WEBHOOK"];
 if(webhook_url) {
@@ -35,7 +35,7 @@ if(webhook_url) {
         });
 
         // This usually doesn't happen unless we run the server before the client is finished...
-        if(result.length == 0) {
+        if(result.length === 0) {
           console.log("Skipped cron summary due to lack of records");
           if(checkInId) captureCheckIn({
             checkInId,
@@ -110,7 +110,7 @@ if(webhook_url) {
       try {
         let res: Response | undefined;
         // Check if not received webhook needs to be sent (if the last received data is more than 15 seconds ago)
-        if(!alreadyNotified && status.lastReceived.getTime() < Date.now() - cron.noDataCheck.checkInterval) {
+        if(!alreadyNotified && mqttStatus.lastReceived.getTime() < Date.now() - cron.noDataCheck.checkInterval) {
           res = await discordWebhook(webhook_url, {
             title: "🔴 No Data Received 🔴",
             description: `No data has been received in the last minute`,
@@ -118,12 +118,13 @@ if(webhook_url) {
             fields: [
               {
                 name: "⏱️ Last Received",
-                value: status.lastReceived.toISOString()
+                value: mqttStatus.lastReceived.toISOString()
               }
             ]
           });
+          console.log(`No data received in the last minute. Last received: ${mqttStatus.lastReceived.toISOString()}`);
           alreadyNotified = true;
-        } else if(alreadyNotified && status.lastReceived.getTime() > Date.now() - 15 * 1000) {
+        } else if(alreadyNotified && mqttStatus.lastReceived.getTime() > Date.now() - 15 * 1000) {
           res = await discordWebhook(webhook_url, {
             title: "🟢 Data Received 🟢",
             description: `Data has been received again`,
@@ -131,10 +132,11 @@ if(webhook_url) {
             fields: [
               {
                 name: "⏱️ Last Received",
-                value: status.lastReceived.toISOString()
+                value: mqttStatus.lastReceived.toISOString()
               }
             ]
           });
+          console.log(`Data received again at ${mqttStatus.lastReceived.toISOString()}`);
           alreadyNotified = false;
         }
 
