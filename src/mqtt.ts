@@ -1,5 +1,4 @@
 import { captureException, startInactiveSpan, metrics } from '@sentry/node';
-import "@sentry/tracing";
 import { ErrorWithReasonCode, connect } from 'mqtt';
 import { MQTTData } from './protobuf';
 import { util } from 'protobufjs';
