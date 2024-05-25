@@ -10,7 +10,9 @@ export const mqttStatus = {
   lastReceived: new Date(),
 };
 
-const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org");
+const client = connect(process.env["MQTT_URL"] ?? "mqtt://test.mosquitto.org", {
+  protocolVersion: 5,
+});
 
 client.on("connect", () => {
   console.log("MQTT Connection Established");
