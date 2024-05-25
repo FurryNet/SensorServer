@@ -1,4 +1,4 @@
-import { captureException, startInactiveSpan } from '@sentry/node';
+import { captureException, startInactiveSpan, metrics } from '@sentry/node';
 import "@sentry/tracing";
 import { ErrorWithReasonCode, connect } from 'mqtt';
 import { MQTTData } from './protobuf';
@@ -56,8 +56,13 @@ client.on("message", async (topic, message) => {
       }
     });
 
+    // Capture it on sentry as well (for convenient views)
+    metrics.distribution("data.temperature", data.temperature);
+    metrics.distribution("data.humidity", data.humidity, { unit: "percent" });
+
     mqttStatus.lastReceived = new Date();
     console.log(`Processed data from ${data.identifier}`);
+    metrics.increment("mqtt.received", 1);
   } catch(ex) {
     if (ex instanceof util.ProtocolError) {
       console.log("MQTT Received incomplete Protobuf Data: "+ex);
