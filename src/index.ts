@@ -2,6 +2,13 @@
 import { extraErrorDataIntegration, prismaIntegration, init as SentryInit} from "@sentry/node";
 import { commitHash } from "./utils";
 import { Prisma } from "@prisma/client";
+import { SEMRESATTRS_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+import { registerInstrumentations } from '@opentelemetry/instrumentation';
+import { SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
+import { PrismaInstrumentation } from '@prisma/instrumentation';
+import { Resource } from '@opentelemetry/resources';
 
 // Exit if node version isnt 18.XX+
 const nodeVersion = Number(process.version.split(".")[0].slice(1));
@@ -9,6 +16,20 @@ if(nodeVersion < 18) {
   console.log("Minimum Node v18.XX is required");
   process.exit(1);
 }
+
+/* Setup openTelemetry tracing */
+const provider = new NodeTracerProvider({
+  resource: new Resource({
+    [SEMRESATTRS_SERVICE_NAME]: 'example application',
+  }),
+});
+provider.addSpanProcessor(new SimpleSpanProcessor(new OTLPTraceExporter()));
+
+registerInstrumentations({
+  tracerProvider: provider,
+  instrumentations: [new PrismaInstrumentation()],
+});
+provider.register();
 
 /* Setup Sentry monitoring */
 const DSN = process.env["SENTRY_DSN"];
