@@ -6,7 +6,7 @@ import { util } from 'protobufjs';
 import { PrismaCli, dataValidation } from './utils';
 import { Prisma } from '@prisma/client';
 
-export const status = {
+export const mqttStatus = {
   lastReceived: new Date(),
 };
 
@@ -54,7 +54,7 @@ client.on("message", async (topic, message) => {
       }
     });
 
-    status.lastReceived = new Date();
+    mqttStatus.lastReceived = new Date();
     console.log(`Processed data from ${data.identifier}`);
   } catch(ex) {
     if (ex instanceof util.ProtocolError) {
