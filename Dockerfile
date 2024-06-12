@@ -38,9 +38,6 @@ FROM node:20-alpine
 # Setup the environment?
 WORKDIR /app/
 
-# Install/upgrade some system packages
-RUN npm install -g npm@latest
-
 # Copy files from the build env
 COPY --from=buildenv /source/dist /app/
 COPY --from=buildenv /source/node_modules /app/node_modules/
